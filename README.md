@@ -200,6 +200,13 @@ Not run, for want of a Printables account, and written to what is known:
 - **How long a token lasts.** "Minutes" is the third party's word; `pc login`
   reports the expiry the token itself states.
 
+`pc login` was run against the live site in a real (headed) Chrome with
+PartCAD's extension: from where it was tested, www.printables.com put
+Cloudflare's "Verify you are human" in front of its pages, which the
+extension's bar asks the person to confirm, and nothing else. Signing in
+through Prusa Account, and the `auth.access_token` cookie it is expected to
+leave, were not seen live, for want of an account.
+
 ## Layout
 
 | Path | Purpose |
