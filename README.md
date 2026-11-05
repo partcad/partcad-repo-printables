@@ -47,8 +47,9 @@ show these numbers; `pc info` of a part does, as its `file`, and a search names
 every hit by one. A name is a folder and a file because a model can have one
 file name in two folders, one variant each.
 
-Both parameters may be given, and must then agree. "Best" is by format, in
-this order, and among files of one format the first in the designer's order:
+Both may be given, and must then agree; a third, `source`, and the plugin's
+own `formats` are under [Parameters](#parameters). "Best" is by format, in
+this order unless `formats` says otherwise, and among files of one format the first in the designer's order:
 
 | Format | Read as PartCAD part type | Extensions |
 | --- | --- | --- |
@@ -147,6 +148,78 @@ does not carry PartCAD's environment into its container, so an environment
 variable does not reach the plugin there. The repository parameter does, being
 part of what PartCAD hands the plugin; use that (`pc login` does), or
 `pythonSandbox: venv`.
+
+## Parameters
+
+The plugin's parameters, declared in `partcad.yaml`, are a default for every
+Printables part:
+
+| Parameter | Default | What it is |
+| --- | --- | --- |
+| `formats` | all, in the order above | The formats to take a model in, best first, separated by commas. A format left out is not taken - `stl,3mf` is meshes only - unless a part asks for it by its own `format` or `file`. |
+| `source` | `auto` | Which of a model's files: Printables has no preview meshes of its own - and a free model's files need no login at all - so `auto` and `original` are the same here and `preview` finds nothing. |
+| `token` | empty | The `auth.access_token` cookie of printables.com, signed in. Only a paid model's files need it, and only its buyer's; it is short-lived. `PRINTABLES_TOKEN` gives it too. |
+
+They are yours to set without touching this package - every one of them, the
+credentials included, and the OAuth or API-key settings beside them:
+
+- in your own `~/.partcad/config.yaml`, by the plugin's name, which is where
+  `pc login` keeps the credentials:
+
+  ```yaml
+  parameters:
+    "//pub/universe/printables:printables_repo":
+      formats: stl,3mf
+  ```
+
+- or, for anything but the credentials, in a package of your own, as an enrich
+  of the plugin and a package it serves - `//printables_meshes:<model>` in a
+  package at the root:
+
+  ```yaml
+  repositories:
+    meshes_repo:
+      type: enrich
+      source: //pub/universe/printables:printables_repo
+      with:
+        formats: stl,3mf
+  dependencies:
+    printables_meshes:
+      type: external
+      plugin: :meshes_repo
+  ```
+
+A part's own `file`, `format` and `source` override them for that part - in its
+name (`271731;format=stl`), or in the `with` of an enrich of the part:
+
+```yaml
+parts:
+  clip:
+    type: enrich
+    source: //pub/universe/printables/models:271731
+    with:
+      format: stl
+```
+
+PartCAD keys what it caches of this package on your overrides of the plugin's
+parameters, so a change to one - logging in, too - takes effect at once. An
+environment variable is not seen there: after setting one, `pc update`
+refreshes what was cached without it.
+
+## Logging in with nobody at the screen
+
+An AI agent, or a script, logs in without a browser:
+
+```shell
+pc login --agent //pub/universe/printables:printables_repo
+pc login --agent --set token=... //pub/universe/printables:printables_repo
+```
+
+The first prints what a person would do in the browser instead of opening one -
+where to sign in, what to copy, and the command that hands it over - and exits
+with status 3. It says that a free model's files need no login at all, and where in a signed-in browser the token is. The second hands over what the person found; the
+plugin checks it with Printables before PartCAD keeps it. `pc mcp`'s `login`
+tool works the same way.
 
 ## Status
 

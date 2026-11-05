@@ -42,7 +42,9 @@ import urllib.parse
 # to what is answered - here or in remote_models.py.
 #
 # v1: models as parts, one per file of any of a model's file lists.
-CACHE_VERSION = 1
+# v2: a part's 'source' parameter, and the plugin's 'formats' and 'source' preferences;
+#     'login' says what to do with nobody at the screen.
+CACHE_VERSION = 2
 
 
 def _shared():
@@ -153,6 +155,12 @@ class Printables(rm.Site):
     URL = WEB
     DESC = "Models on Printables, a part per file, by the model's number. Nothing is listed; search instead."
     VERSION = CACHE_VERSION
+    LOGIN_INSTRUCTIONS = (
+        "A free model's files need no login at all; only a paid model's do, and only for the account that bought it. "
+        "What is needed then is the 'auth.access_token' cookie of printables.com, from a browser signed in to "
+        "Printables: the browser's developer tools show it, under Application (or Storage) > Cookies. It is short- "
+        "lived."
+    )
     CREDENTIALS = {"token": "PRINTABLES_TOKEN"}
 
     def __init__(self, request=None):

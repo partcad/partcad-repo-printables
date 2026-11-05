@@ -46,18 +46,75 @@ repositories:
     type: basic
     path: printables_repo.py
     desc: Serves Printables models as parts, searches Printables, and logs in to it.
+    # Every parameter here is a default for every Printables part, and yours
+    # to change without touching this package, two ways:
+    #
+    # - in your own ~/.partcad/config.yaml, under 'parameters', by the
+    #   plugin's name - which is also where 'pc login' keeps the token:
+    #
+    #     parameters:
+    #       //pub/universe/printables:printables_repo:
+    #         formats: stl,3mf
+    #
+    # - or in a package of your own, as an enrich of the plugin and a package
+    #   it serves, whose parts are then yours to name - '//printables_meshes:<model>'
+    #   in a package at the root (never with credentials: those are yours,
+    #   not a package's):
+    #
+    #     repositories:
+    #       meshes_repo:
+    #         type: enrich
+    #         source: //pub/universe/printables:printables_repo
+    #         with:
+    #           formats: stl,3mf
+    #     dependencies:
+    #       printables_meshes:
+    #         type: external
+    #         plugin: :meshes_repo
+    #
+    # A part's own parameters override these for that part. Every part takes
+    # 'file' (one of the model's files, by name or by id - 'other-<id>',
+    # 'gcode-<id>' or 'sla-<id>' outside its STLs), 'format' (its best file of
+    # that format: step, brep, 3mf, stl, obj, glb or scad) and 'source' (as
+    # below) - in its name, '271731;format=stl', or in the 'with' of an enrich
+    # of the part:
+    #
+    #     parts:
+    #       clip:
+    #         type: enrich
+    #         source: //pub/universe/printables/models:271731
+    #         with:
+    #           format: stl
     parameters:
-      # Empty here, and meant to stay so. A credential is the user's own, and
-      # is set where only they see it - 'pc login' saves it in the user's own
-      # configuration; the plugin reads the environment when this is empty.
+      formats:
+        type: string
+        default: ""
+        desc: >-
+          The formats to take a model in, best first, separated by commas:
+          step, brep, 3mf, stl, obj, glb, scad. A format left out is not taken
+          - 'stl,3mf' is meshes only - unless a part asks for it by its own
+          'format' or 'file'. Empty is all of them, in that order.
+      source:
+        type: string
+        default: auto
+        enum: [auto, original, preview]
+        desc: >-
+          Which of a model's files. Printables has no preview meshes of its
+          own: every file is the designer's - and a free model's need no login
+          at all - so 'auto' and 'original' are the same here, and 'preview'
+          finds nothing.
+      # Empty here, and meant to stay so: a credential is the user's own, and
+      # is set where only they see it.
       token:
         type: string
         default: ""
         desc: >-
           The access token of a signed-in Printables (Prusa Account) user: the
-          'auth.access_token' cookie of printables.com. Only a paid model's files
-          need one, and only that model's buyer's. 'pc login
-          //pub/universe/printables:printables_repo' picks it up from the
-          browser and saves it in your own ~/.partcad/config.yaml; or give it as
-          the PRINTABLES_TOKEN environment variable - never in a package. It is
-          short-lived.
+          'auth.access_token' cookie of printables.com. Only a paid model's
+          files need one, and only that model's buyer's; it is short-lived. 'pc
+          login //pub/universe/printables:printables_repo' gets it in a browser
+          and keeps it in your ~/.partcad/config.yaml, under 'parameters' as
+          above; 'pc login --agent' says how to get it by hand, and takes it
+          back with '--set token=...'. The PRINTABLES_TOKEN environment
+          variable gives it too, where the plugin's sandbox sees the
+          environment (a container does not). Never set it in a package.
