@@ -19,7 +19,7 @@ url: https://www.printables.com/
 # also search their own catalog ('searchKinds') and resolve a parametrized name
 # themselves ('instanceKinds'), which is what lets a parameter choose another
 # file of a model.
-partcad: ">=0.9.3"
+partcad: ">=0.9.4"
 
 # An upload to a model site says nothing about whether, or how, it is made to
 # be manufactured. The plugin says the same of 'models' in its metadata.
