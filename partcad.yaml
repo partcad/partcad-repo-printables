@@ -1,11 +1,11 @@
 # PartCAD package: Printables models as parts, served by a repository plugin.
 #
-# Published as //pub/universe/printables/models: this package is
-# //pub/universe/printables, and its one external dependency 'models' is served by
+# Published as //pub/collection/printables/models: this package is
+# //pub/collection/printables, and its one external dependency 'models' is served by
 # the printables_repo plugin. Nothing is listed - a model site's catalog is not
 # something to enumerate - so a part is asked for by name, and found with
 # 'pc search parts' (see the README).
-name: //pub/universe/printables
+name: //pub/collection/printables
 
 desc: |
   Models on Printables (https://www.printables.com) as PartCAD parts, a part per
@@ -29,10 +29,10 @@ docs:
   name: Printables for PartCAD
   usage: |
     ```shell
-    pc search parts -P //pub/universe/printables/models -k "cable clip"
-    pc inspect //pub/universe/printables/models:271731
-    pc inspect "//pub/universe/printables/models:271731;format=stl"
-    pc login //pub/universe/printables:printables_repo
+    pc search parts -P //pub/collection/printables/models -k "cable clip"
+    pc inspect //pub/collection/printables/models:271731
+    pc inspect "//pub/collection/printables/models:271731;format=stl"
+    pc login //pub/collection/printables:printables_repo
     ```
 
 dependencies:
@@ -53,7 +53,7 @@ repositories:
     #   plugin's name - which is also where 'pc login' keeps the token:
     #
     #     parameters:
-    #       //pub/universe/printables:printables_repo:
+    #       //pub/collection/printables:printables_repo:
     #         formats: stl,3mf
     #
     # - or in a package of your own, as an enrich of the plugin and a package
@@ -64,7 +64,7 @@ repositories:
     #     repositories:
     #       meshes_repo:
     #         type: enrich
-    #         source: //pub/universe/printables:printables_repo
+    #         source: //pub/collection/printables:printables_repo
     #         with:
     #           formats: stl,3mf
     #     dependencies:
@@ -82,7 +82,7 @@ repositories:
     #     parts:
     #       clip:
     #         type: enrich
-    #         source: //pub/universe/printables/models:271731
+    #         source: //pub/collection/printables/models:271731
     #         with:
     #           format: stl
     parameters:
@@ -112,7 +112,7 @@ repositories:
           The access token of a signed-in Printables (Prusa Account) user: the
           'auth.access_token' cookie of printables.com. Only a paid model's
           files need one, and only that model's buyer's; it is short-lived. 'pc
-          login //pub/universe/printables:printables_repo' gets it in a browser
+          login //pub/collection/printables:printables_repo' gets it in a browser
           and keeps it in your ~/.partcad/config.yaml, under 'parameters' as
           above; 'pc login --agent' says how to get it by hand, and takes it
           back with '--set token=...'. The PRINTABLES_TOKEN environment

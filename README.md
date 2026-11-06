@@ -1,15 +1,15 @@
 # Printables for PartCAD
 
 Serves Printables' models as PartCAD parts, published as
-`//pub/universe/printables/models`.
+`//pub/collection/printables/models`.
 
 **Nothing is listed.** A model site's catalog is not something to enumerate,
 so `pc list parts` of this package is empty, as is `pc list packages`. A part is
 asked for by name, and found with `pc search parts`:
 
 ```shell
-pc search parts -P //pub/universe/printables/models -k "cable clip"
-pc inspect "//pub/universe/printables/models:271731"
+pc search parts -P //pub/collection/printables/models -k "cable clip"
+pc inspect "//pub/collection/printables/models:271731"
 ```
 
 **No geometry is vendored.** Every file is fetched from Printables the first
@@ -103,7 +103,7 @@ the `auth.access_token` cookie of printables.com. Log in once, and PartCAD keeps
 the token as your own parameter of the plugin:
 
 ```shell
-pc login //pub/universe/printables:printables_repo
+pc login //pub/collection/printables:printables_repo
 ```
 
 That opens your browser on printables.com - in PartCAD's own profile of it, with
@@ -124,7 +124,7 @@ export PRINTABLES_TOKEN=...       # read by the plugin; see the note on Docker b
 ```yaml
 # ~/.partcad/config.yaml
 parameters:
-  "//pub/universe/printables:printables_repo":
+  "//pub/collection/printables:printables_repo":
     token: "..."
 ```
 
@@ -168,7 +168,7 @@ credentials included, and the OAuth or API-key settings beside them:
 
   ```yaml
   parameters:
-    "//pub/universe/printables:printables_repo":
+    "//pub/collection/printables:printables_repo":
       formats: stl,3mf
   ```
 
@@ -180,7 +180,7 @@ credentials included, and the OAuth or API-key settings beside them:
   repositories:
     meshes_repo:
       type: enrich
-      source: //pub/universe/printables:printables_repo
+      source: //pub/collection/printables:printables_repo
       with:
         formats: stl,3mf
   dependencies:
@@ -196,7 +196,7 @@ name (`271731;format=stl`), or in the `with` of an enrich of the part:
 parts:
   clip:
     type: enrich
-    source: //pub/universe/printables/models:271731
+    source: //pub/collection/printables/models:271731
     with:
       format: stl
 ```
@@ -211,8 +211,8 @@ refreshes what was cached without it.
 An AI agent, or a script, logs in without a browser:
 
 ```shell
-pc login --agent //pub/universe/printables:printables_repo
-pc login --agent --set token=... //pub/universe/printables:printables_repo
+pc login --agent //pub/collection/printables:printables_repo
+pc login --agent --set token=... //pub/collection/printables:printables_repo
 ```
 
 The first prints what a person would do in the browser instead of opening one -
@@ -284,7 +284,7 @@ leave, were not seen live, for want of an account.
 
 | Path | Purpose |
 | --- | --- |
-| `partcad.yaml` | `//pub/universe/printables`; the `models` external dependency and the `printables_repo` repository that serves it. |
+| `partcad.yaml` | `//pub/collection/printables`; the `models` external dependency and the `printables_repo` repository that serves it. |
 | `printables_repo.py` | The repository plugin: how Printables is asked, and how it is logged in to. |
 | `remote_models.py` | What every model-site plugin shares, byte for byte: the names, the formats, HTTP and its cache, the keys PartCAD asks, logging in. The same file is in partcad-repo-thingiverse, partcad-repo-makerworld, partcad-repo-grabcad, partcad-repo-printables and partcad-repo-cults3d; `remote_models.sha256` is its digest, and a test fails when the two disagree - change it in all five. |
 | `test_*.py` | The tests. Nothing in them touches the network. |

@@ -5,7 +5,7 @@
 #
 """A PartCAD 'basic' repository plugin that serves Printables models as parts.
 
-Published as ``//pub/universe/printables/models``. Nothing is listed: a part is
+Published as ``//pub/collection/printables/models``. Nothing is listed: a part is
 asked for by the model's number (the one in printables.com/model/<number>-<slug>),
 and is one file of that model.
 
@@ -64,7 +64,7 @@ rm = _shared()
 WEB = "https://www.printables.com"
 # With the slash: without it the API answers a redirect, which a POST does not follow.
 API = "https://api.printables.com/graphql/"
-LOGIN_COMMAND = "pc login //pub/universe/printables:printables_repo"
+LOGIN_COMMAND = "pc login //pub/collection/printables:printables_repo"
 
 # A model's details are kept for a day; an answer that carried GraphQL errors
 # is not kept at all (see '_graphql').

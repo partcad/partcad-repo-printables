@@ -232,7 +232,7 @@ def test_a_paid_models_file_says_it_needs_the_buyers_sign_in(site, capsys):
     assert config["type"] == "3mf" and config["desc"] == "Articulated Dragon: Dragon_v2/dragon.3mf"
     assert rm.serve(made, "files/" + config["path"]) is None
     err = capsys.readouterr().err
-    assert "a paid model" in err and "pc login //pub/universe/printables:printables_repo" in err
+    assert "a paid model" in err and "pc login //pub/collection/printables:printables_repo" in err
     assert _graphql_asked(made, "PrintablesDownload") == []
 
 
