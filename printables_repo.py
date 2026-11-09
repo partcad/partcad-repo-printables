@@ -5,11 +5,11 @@
 #
 """A PartCAD 'basic' repository plugin that serves Printables models as parts.
 
-Published as ``//pub/universe/printables/models``. Nothing is listed: a part is
+Published as ``//pub/collection/printables/models``. Nothing is listed: a part is
 asked for by the model's number (the one in printables.com/model/<number>-<slug>),
 and is one file of that model.
 
-    3161                             the model's best file (see remote_models.FORMATS)
+    3161                             the model's best file (see plugin_models.FORMATS)
     3161;format=stl                  its best STL
     3161;file=49068                  one of its files, by its id on Printables
     525789;file=Dragon_v2/Dragon_v2.3mf   or by its name, after the folder it is in
@@ -25,46 +25,36 @@ is given as PRINTABLES_TOKEN or as the repository's 'token' parameter.
 PartCAD runs this script once per key (via runpy) with the key in
 ``request["key"]``, and with ``__name__ == "login"`` for 'pc login'; the answer
 goes in ``output``. What the keys mean, and everything else that is the same for
-every model site, is in remote_models.py.
+every model site, is PartCAD's plugin_models.
 """
 
 import base64
-import importlib.util
 import json
-import os
 import re
-import sys
 import time
 import urllib.parse
 
+# PartCAD's toolkit for model-site plugins: one of its wrappers, on the path of
+# every sandbox a plugin runs in, from PartCAD 0.9.20 on.
+import plugin_models as rm
+
 # When this plugin's answers stopped meaning what they meant before. PartCAD
 # keys everything it caches of this package on it, so raise it with any change
-# to what is answered - here or in remote_models.py.
+# to what is answered - here or in PartCAD's plugin_models.
 #
 # v1: models as parts, one per file of any of a model's file lists.
 # v2: a part's 'source' parameter, and the plugin's 'formats' and 'source' preferences;
 #     'login' says what to do with nobody at the screen.
-CACHE_VERSION = 2
+# v3: the toolkit is PartCAD's own (plugin_models): IGES, OpenUSD and the native
+#     formats of CAD applications are taken too, and a model's id is spelled in
+#     a file's path the way it is read back.
+CACHE_VERSION = 3
 
-
-def _shared():
-    """remote_models.py, beside this script, under a name of this plugin's own."""
-    name = "_partcad_printables_remote_models"
-    if name not in sys.modules:
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "remote_models.py")
-        spec = importlib.util.spec_from_file_location(name, path)
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[name] = module
-        spec.loader.exec_module(module)
-    return sys.modules[name]
-
-
-rm = _shared()
 
 WEB = "https://www.printables.com"
 # With the slash: without it the API answers a redirect, which a POST does not follow.
 API = "https://api.printables.com/graphql/"
-LOGIN_COMMAND = "pc login //pub/universe/printables:printables_repo"
+LOGIN_COMMAND = "pc login //pub/collection/printables:printables_repo"
 
 # A model's details are kept for a day; an answer that carried GraphQL errors
 # is not kept at all (see '_graphql').

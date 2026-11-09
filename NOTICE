@@ -4,7 +4,7 @@ partcad-repo-printables
 This PartCAD package serves Printables' models as PartCAD parts.
 
 The code in this repository (the `printables_repo.py` repository plugin, the
-shared `remote_models.py`, the PartCAD configuration and the tests) is:
+PartCAD configuration and the tests) is:
 
     Copyright 2026 PartCAD
     Licensed under the Apache License, Version 2.0 (see LICENSE).

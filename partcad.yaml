@@ -1,11 +1,11 @@
 # PartCAD package: Printables models as parts, served by a repository plugin.
 #
-# Published as //pub/universe/printables/models: this package is
-# //pub/universe/printables, and its one external dependency 'models' is served by
+# Published as //pub/collection/printables/models: this package is
+# //pub/collection/printables, and its one external dependency 'models' is served by
 # the printables_repo plugin. Nothing is listed - a model site's catalog is not
 # something to enumerate - so a part is asked for by name, and found with
 # 'pc search parts' (see the README).
-name: //pub/universe/printables
+name: //pub/collection/printables
 
 desc: |
   Models on Printables (https://www.printables.com) as PartCAD parts, a part per
@@ -14,12 +14,10 @@ desc: |
   is fetched from Printables when it is first built.
 url: https://www.printables.com/
 
-# The first PartCAD with 'pc login', which runs the plugin's 'login' to pick a
-# paid model's buyer's token up from their browser. Its repository plugins may
-# also search their own catalog ('searchKinds') and resolve a parametrized name
-# themselves ('instanceKinds'), which is what lets a parameter choose another
-# file of a model.
-partcad: ">=0.9.3"
+# The first PartCAD that has the toolkit this plugin is written with
+# (plugin_models), and hands a repository plugin the key it is asked for
+# taken apart ('query').
+partcad: ">=0.9.20"
 
 # An upload to a model site says nothing about whether, or how, it is made to
 # be manufactured. The plugin says the same of 'models' in its metadata.
@@ -29,10 +27,10 @@ docs:
   name: Printables for PartCAD
   usage: |
     ```shell
-    pc search parts -P //pub/universe/printables/models -k "cable clip"
-    pc inspect //pub/universe/printables/models:271731
-    pc inspect "//pub/universe/printables/models:271731;format=stl"
-    pc login //pub/universe/printables:printables_repo
+    pc search parts -P //pub/collection/printables/models -k "cable clip"
+    pc inspect //pub/collection/printables/models:271731
+    pc inspect "//pub/collection/printables/models:271731;format=stl"
+    pc login //pub/collection/printables:printables_repo
     ```
 
 dependencies:
@@ -53,7 +51,7 @@ repositories:
     #   plugin's name - which is also where 'pc login' keeps the token:
     #
     #     parameters:
-    #       //pub/universe/printables:printables_repo:
+    #       //pub/collection/printables:printables_repo:
     #         formats: stl,3mf
     #
     # - or in a package of your own, as an enrich of the plugin and a package
@@ -64,7 +62,7 @@ repositories:
     #     repositories:
     #       meshes_repo:
     #         type: enrich
-    #         source: //pub/universe/printables:printables_repo
+    #         source: //pub/collection/printables:printables_repo
     #         with:
     #           formats: stl,3mf
     #     dependencies:
@@ -75,14 +73,14 @@ repositories:
     # A part's own parameters override these for that part. Every part takes
     # 'file' (one of the model's files, by name or by id - 'other-<id>',
     # 'gcode-<id>' or 'sla-<id>' outside its STLs), 'format' (its best file of
-    # that format: step, brep, 3mf, stl, obj, glb or scad) and 'source' (as
+    # that format: one of the 'formats' below) and 'source' (as
     # below) - in its name, '271731;format=stl', or in the 'with' of an enrich
     # of the part:
     #
     #     parts:
     #       clip:
     #         type: enrich
-    #         source: //pub/universe/printables/models:271731
+    #         source: //pub/collection/printables/models:271731
     #         with:
     #           format: stl
     parameters:
@@ -91,7 +89,9 @@ repositories:
         default: ""
         desc: >-
           The formats to take a model in, best first, separated by commas:
-          step, brep, 3mf, stl, obj, glb, scad. A format left out is not taken
+          step, brep, iges, 3mf, stl, obj, glb, usd, sldprt, ipt,
+          catpart, f3d, fcstd, sat, pvz, scad. A format left out is
+          not taken
           - 'stl,3mf' is meshes only - unless a part asks for it by its own
           'format' or 'file'. Empty is all of them, in that order.
       source:
@@ -112,7 +112,7 @@ repositories:
           The access token of a signed-in Printables (Prusa Account) user: the
           'auth.access_token' cookie of printables.com. Only a paid model's
           files need one, and only that model's buyer's; it is short-lived. 'pc
-          login //pub/universe/printables:printables_repo' gets it in a browser
+          login //pub/collection/printables:printables_repo' gets it in a browser
           and keeps it in your ~/.partcad/config.yaml, under 'parameters' as
           above; 'pc login --agent' says how to get it by hand, and takes it
           back with '--set token=...'. The PRINTABLES_TOKEN environment

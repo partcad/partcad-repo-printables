@@ -232,7 +232,7 @@ def test_a_paid_models_file_says_it_needs_the_buyers_sign_in(site, capsys):
     assert config["type"] == "3mf" and config["desc"] == "Articulated Dragon: Dragon_v2/dragon.3mf"
     assert rm.serve(made, "files/" + config["path"]) is None
     err = capsys.readouterr().err
-    assert "a paid model" in err and "pc login //pub/universe/printables:printables_repo" in err
+    assert "a paid model" in err and "pc login //pub/collection/printables:printables_repo" in err
     assert _graphql_asked(made, "PrintablesDownload") == []
 
 
@@ -411,12 +411,3 @@ def test_partcad_runs_its_login(monkeypatch):
             run_name="login",
         )
     assert callback.calls[0]["url"] == "https://www.printables.com/"
-
-
-def test_the_shared_module_is_the_one_every_model_site_plugin_has():
-    import hashlib
-
-    with open(os.path.join(_HERE, "remote_models.py"), "rb") as f:
-        digest = hashlib.sha256(f.read()).hexdigest()
-    with open(os.path.join(_HERE, "remote_models.sha256")) as f:
-        assert digest == f.read().split()[0], "remote_models.py differs from the shared copy: update all five"
