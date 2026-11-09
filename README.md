@@ -19,7 +19,8 @@ time a part is built, and kept by PartCAD from then on.
 and so does the plugin of what it serves: an upload to a model site says
 nothing about whether, or how, it is made to be made.
 
-Requires PartCAD 0.9.3 or newer: the first release with `pc login`, which is how
+Requires PartCAD 0.9.20 or newer, the first release with the toolkit the plugin
+is written with (`plugin_models`). 0.9.3 was the first release with `pc login`, which is how
 the plugin is given a paid model's buyer's sign-in. Its repository plugins may
 also search their own catalog (`searchKinds`) and resolve a parametrized name
 themselves (`instanceKinds`); both are described under "Repositories" in
@@ -79,7 +80,7 @@ ACIS, Creo View), which PartCAD reads through a converter it downloads on first
 use, come after the meshes, to be taken when a model has nothing else or when
 asked for. An OpenSCAD source is last, because on a model site
 it is usually the customizable source of the meshes beside it. A file in any
-other format - Fusion 360, SketchUp, AMF, a G-code, a picture - is not a part. A
+other format - SketchUp, Blender, AMF, a G-code, a picture - is not a part. A
 name that asks for one, or for a file the model has not got, is not found, and
 the plugin says why.
 
