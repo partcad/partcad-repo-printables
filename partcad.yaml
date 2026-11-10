@@ -118,3 +118,4 @@ repositories:
           back with '--set token=...'. The PRINTABLES_TOKEN environment
           variable gives it too, where the plugin's sandbox sees the
           environment (a container does not). Never set it in a package.
+        shared: true

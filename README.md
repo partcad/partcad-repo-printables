@@ -143,6 +143,12 @@ parameters:
     token: "..."
 ```
 
+`token` is the package's, not only the plugin's: it says `shared: true`. With
+PartCAD 0.10.4 or later, `pc login` keeps it under the package,
+`"//pub/collection/printables":`, where an entry gives it to every object of the
+package; an entry for the plugin, as above, still works, and wins over the
+package's. An older PartCAD reads the plugin's entry only.
+
 **The token is short-lived.** It is a Prusa Account access token, which the
 website renews as it is used and which, by what is known of it, lasts minutes
 rather than days; `pc login` says when the one it saved expires. When a paid
